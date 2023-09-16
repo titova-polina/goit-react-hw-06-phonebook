@@ -1,5 +1,12 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { Wrapper, Label, Input } from './Filter.styled';
-export const Filter = ({ value, onChange }) => {
+import { getFilter } from 'redux/selectors';
+import { updateFilter } from 'redux/filter';
+
+export const Filter = () => {
+  const value = useSelector(getFilter);
+  const dispatch = useDispatch();
+
   return (
     <Wrapper>
       <Label>Find contacts by name</Label>
@@ -7,9 +14,7 @@ export const Filter = ({ value, onChange }) => {
         type="text"
         value={value}
         placeholder="Type name..."
-        onChange={evt => {
-          onChange(evt.target.value);
-        }}
+        onChange={evt => dispatch(updateFilter(evt.target.value))}
       />
     </Wrapper>
   );

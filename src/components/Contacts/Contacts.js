@@ -1,12 +1,28 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { Item, Btn } from './Contacts.styled';
-export const Contacts = ({ contacts, onDelete }) => {
+import { getContacts, getFilter } from 'redux/selectors';
+import { deleteContact } from 'redux/contact';
+export const Contacts = () => {
+  const contacts = useSelector(getContacts);
+  const search = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+  const visibleContacts = contacts.filter(
+    contact =>
+      !search ||
+      contact.name.toLowerCase().includes(search.toLowerCase()) ||
+      contact.number.includes(search)
+  );
+
   return (
     <>
       <ul>
-        {contacts.map(contact => (
+        {visibleContacts.map(contact => (
           <Item key={contact.id}>
             {contact.name}: {contact.number}
-            <Btn onClick={() => onDelete(contact.id)}>Delete</Btn>
+            <Btn onClick={() => dispatch(deleteContact(contact.id))}>
+              Delete
+            </Btn>
           </Item>
         ))}
       </ul>

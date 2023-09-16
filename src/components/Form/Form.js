@@ -2,6 +2,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { nanoid } from 'nanoid';
 import { StForm, StField, Error, Btn } from './Form.styled';
+import { useDispatch } from 'react-redux';
+import { addContact } from 'redux/contact';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().min(2).max(50).required('* Name is required'),
@@ -11,7 +13,9 @@ const validationSchema = Yup.object().shape({
     .required('* Enter phone number'),
 });
 
-export const Form = ({ onAdd }) => {
+export const Form = () => {
+  const dispatch = useDispatch();
+
   return (
     <>
       <Formik
@@ -21,7 +25,7 @@ export const Form = ({ onAdd }) => {
         }}
         validationSchema={validationSchema}
         onSubmit={(values, actions) => {
-          onAdd({ ...values, id: nanoid() });
+          dispatch(addContact({ ...values, id: nanoid() }));
           actions.resetForm();
         }}
       >
@@ -33,7 +37,7 @@ export const Form = ({ onAdd }) => {
           </label>
           <label>
             Number
-            <StField type="number" name="number" placeholder="xxx-xx-xx" />
+            <StField type="tel" name="number" placeholder="xxx-xx-xx" />
             <Error name="number" component="div" />
           </label>
           <Btn type="submit">Add contact</Btn>
